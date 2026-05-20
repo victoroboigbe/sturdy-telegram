@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-heading: "Bebas Neue", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  
+  --color-buzz-bg: #b0a494;
+  --color-buzz-dark: #1a1a1a;
+  --color-buzz-orange: #e8633c;
+  --color-buzz-yellow: #f4d03f;
+}
+
+@layer base {
+  body {
+    @apply bg-buzz-bg text-buzz-dark font-sans selection:bg-buzz-orange selection:text-white;
+  }
+}
+
+.buzz-heading {
+  @apply font-heading uppercase leading-[0.8] tracking-tight;
+}
+
+.buzz-border {
+  @apply border-buzz-dark/20;
+}
+
+.buzz-nav-link {
+  @apply text-[10px] uppercase tracking-[0.1em] font-bold hover:text-white transition-colors;
+}
+
+.buzz-button {
+  @apply bg-buzz-dark text-white px-6 py-2 text-[10px] uppercase font-bold tracking-widest transition-all hover:bg-buzz-orange;
+}

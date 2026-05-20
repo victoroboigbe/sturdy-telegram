@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3: Primitive Definitions
+    function isSignedIn() { return request.auth != null; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    function isValidBooking(data) {
+      let requiredFields = ['service', 'date', 'time', 'clientName', 'clientEmail', 'clientPhone', 'status', 'createdAt'];
+      return data.keys().hasAll(requiredFields) 
+        && data.keys().size() == 8
+        && data.service is string && data.service.size() <= 100
+        && data.date is string && data.date.size() <= 20
+        && data.time is string && data.time.size() <= 20
+        && data.clientName is string && data.clientName.size() <= 100
+        && data.clientEmail is string && data.clientEmail.size() <= 100
+        && data.clientPhone is string && data.clientPhone.size() <= 20
+        && data.status in ['pending', 'confirmed', 'cancelled']
+        && data.createdAt == request.time;
+    }
+
+    match /bookings/{bookingId} {
+      // Public can create bookings
+      allow create: if isValidId(bookingId) 
+        && isValidBooking(incoming())
+        && incoming().status == 'pending'; // Must start as pending
+      
+      // Only admins (if implemented) or future auth logic can read/list
+      // For now, let's assume public can't read their own bookings back without a private key/auth
+      // Since this is a simple demo, we restrict read.
+      allow get: if false; 
+      allow list: if false; 
+      
+      // Updates are not allowed for public for now, as it's a "submit and forget" form
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

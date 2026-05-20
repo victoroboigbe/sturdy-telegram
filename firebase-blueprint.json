@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "booking": {
+      "title": "Booking",
+      "description": "An appointment booking at Sam's Barber Shop.",
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string",
+          "description": "The name of the service booked."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of the appointment (ISO string)."
+        },
+        "time": {
+          "type": "string",
+          "description": "The time of the appointment."
+        },
+        "clientName": {
+          "type": "string",
+          "description": "The name of the client."
+        },
+        "clientEmail": {
+          "type": "string",
+          "description": "The email address of the client."
+        },
+        "clientPhone": {
+          "type": "string",
+          "description": "The phone number of the client."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "confirmed", "cancelled"],
+          "description": "The status of the booking."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the booking was created."
+        }
+      },
+      "required": ["service", "date", "time", "clientName", "clientEmail", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/bookings/{bookingId}": {
+      "schema": "booking",
+      "description": "Collection of all appointment bookings."
+    }
+  }
+}
